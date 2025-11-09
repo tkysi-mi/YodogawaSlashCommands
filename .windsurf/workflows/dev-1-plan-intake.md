@@ -1,3 +1,8 @@
+---
+description: 
+auto_execution_mode: 1
+---
+
 # /dev-1-plan-intake
 
 ## 目的
