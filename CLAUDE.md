@@ -48,6 +48,7 @@ Windsurfで活用するスラッシュコマンドとワークフローの保管
 
 **C系列：実装実行ワークフロー**
 - `/c-001-ImplementTask` — タスク実装実行（speckit.implementスタイル）
+- `/c-002-UpdateDocumentation` — 実装完了後のドキュメント更新（タスク・プロジェクトレベル）
 
 **X系列：補助的なワークフロー（Object-Action形式）**
 - `/x-Context-CatchUp` — プロジェクト状況の把握
@@ -89,6 +90,12 @@ Windsurfで活用するスラッシュコマンドとワークフローの保管
    - 各ステップでテスト実行、チェックボックス自動更新
    - フェーズごとの受け入れ基準確認
    - 最終テスト、コミット、PR作成
+6. **c-002**: ドキュメント更新（実装完了後）
+   - タスクドキュメント更新（a-definition.md, b-research.md, c-implementation.md）
+   - プロジェクトドキュメント更新（features-implemented, domain-model, api-spec, data-model）
+   - 計画と実装の差異記録、振り返り
+   - README, CHANGELOG, .env.example 更新
+   - ドキュメント整合性確認、コミット
 
 **speckit.implement との対応**:
 - constitution → タスク定義（a-definition.md）

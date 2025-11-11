@@ -74,6 +74,14 @@ Windsurfで活用するスラッシュコマンドとワークフローの保管
    - フェーズごとに受け入れ基準を確認
    - 最終テスト、コミット、PR作成
 
+6. **ドキュメント更新**: `/c-002-UpdateDocumentation`
+   - 実装完了後にドキュメントを実装内容に合わせて更新
+   - タスクドキュメント更新（a-definition.md, b-research.md, c-implementation.md）
+   - プロジェクトドキュメント更新（features-implemented, domain-model, api-spec, data-model）
+   - 計画と実装の差異を記録
+   - README, CHANGELOG, .env.example の更新
+   - ドキュメント間の整合性確認
+
 ### タスクディレクトリ構造の例
 
 ```
