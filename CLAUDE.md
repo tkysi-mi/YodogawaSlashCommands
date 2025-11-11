@@ -39,6 +39,7 @@ Windsurfで活用するスラッシュコマンドとワークフローの保管
 - `/a-011-DefineAPISpec` — API仕様定義
 - `/a-012-DefineArchitecture` — アーキテクチャ設計（ADR）
 - `/a-013-DefineInfrastructure` — インフラ設計（RPO/RTO）
+- `/a-014-ReviewDesign` — 設計ドキュメントの一貫性レビュー
 
 **B系列：タスク管理ワークフロー**
 - `/b-000-CreateTaskDirectory` — タスクディレクトリ作成（task000001-xxx形式）
