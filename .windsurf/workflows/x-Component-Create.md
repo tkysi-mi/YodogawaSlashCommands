@@ -1,5 +1,5 @@
 ---
-description: React/Vueコンポーネントをボイラープレート、Props型定義、Storybook、テストと共に生成するワークフロー
+description: UIコンポーネントをボイラープレート、型定義、ストーリー、テストと共に生成するワークフロー
 auto_execution_mode: 1
 ---
 
@@ -7,405 +7,278 @@ auto_execution_mode: 1
 
 ## 目的
 
-- React/Vue コンポーネントを素早く作成し、開発効率を向上させる。
-- Props 型定義、Storybook ストーリー、テストファイルを一括で生成する。
+- UI コンポーネントを素早く作成し、開発効率を向上させる。
+- Props/型定義、ストーリー/プレビュー、テストファイルを一括で生成する。
 - プロジェクトの命名規則とディレクトリ構造に従ったコンポーネントを作成する。
-- アトミックデザインや Feature-Sliced Design などのアーキテクチャパターンに対応する。
+- 設計パターン（Atomic Design, Feature-Sliced Design等）に対応する。
 
 ## 前提
 
-- React または Vue プロジェクトがセットアップされている。
-- TypeScript が使用されている（推奨）。
-- Storybook がセットアップされている（オプション）。
-- テストフレームワーク（Jest, Vitest, Testing Library）がセットアップされている（オプション）。
+- UI フレームワークがセットアップされている（React, Vue, Svelte, Solid等）。
+- 型システムが使用されている（TypeScript推奨）。
+- コンポーネントストーリー/プレビューツールがセットアップされている（Storybook, Histoire等、オプション）。
+- テストフレームワークがセットアップされている（Jest, Vitest, Testing Library等、オプション）。
 - プロジェクトの命名規則とディレクトリ構造が決まっている。
 
 ## 手順
 
-### 1. コンポーネント情報の収集
+### 1. コンポーネント設計の決定
 
-**質問1: フレームワークの確認**
-- 「使用しているフレームワークは何ですか？」
-  - React
-  - Vue 3
-  - Next.js
-  - Nuxt 3
+**コンポーネントの種類**:
+- **プレゼンテーショナル**: UI表示のみ、ロジックなし
+- **コンテナ**: データ取得やステート管理を含む
+- **レイアウト**: ページ構造を定義
+- **ユーティリティ**: 再利用可能な小さなコンポーネント
 
-**質問2: コンポーネント名**
-- 「コンポーネント名を教えてください。」
-- 命名規則：
-  - PascalCase（例: `UserCard`, `NavigationBar`）
-  - 明確で説明的な名前
-  - 単数形または複数形を適切に使い分け
+**設計パターン**:
+- **Atomic Design**: Atoms → Molecules → Organisms → Templates → Pages
+- **Feature-Sliced Design**: features/{feature}/ui/
+- **Flat Structure**: components/
+- **Domain-Driven**: domains/{domain}/components/
 
-**質問3: コンポーネントの種類**
-- 「どの種類のコンポーネントですか？」
-  - **Atoms（原子）**: 最小単位（Button, Input, Label）
-  - **Molecules（分子）**: Atoms の組み合わせ（SearchBar, FormField）
-  - **Organisms（有機体）**: Molecules の組み合わせ（Header, UserProfile）
-  - **Templates（テンプレート）**: ページレイアウト
-  - **Pages（ページ）**: 実際のページ
+**命名規則**:
+- PascalCase（例: `UserCard`, `NavigationBar`）
+- 明確で説明的な名前
+- 単数形または複数形を適切に使い分け
 
-**質問4: ディレクトリ構造**
-- 「プロジェクトのディレクトリ構造は何ですか？」
-  - Atomic Design: `src/components/atoms/`, `src/components/molecules/`, etc.
-  - Feature-Sliced Design: `src/features/<feature>/ui/`
-  - Flat: `src/components/`
-  - Layered: `src/presentation/components/`
+### 2. ディレクトリ構造の決定
 
-### 2. コンポーネントファイルの作成
+**一般的なパターン**:
 
-#### 2.1. ディレクトリ構造の決定
-
-**コンポーネントディレクトリ**:
+**単一ファイル**:
 ```
-src/components/atoms/Button/
-├── Button.tsx           # メインコンポーネント
-├── Button.module.css    # スタイル (CSS Modules の場合)
-├── Button.stories.tsx   # Storybook ストーリー
-├── Button.test.tsx      # テストファイル
-└── index.ts             # エクスポート
+src/components/Button.tsx
 ```
 
-#### 2.2. メインコンポーネントファイルの作成
+**コロケーション**（推奨）:
+```
+src/components/Button/
+├── Button.tsx              # メインコンポーネント
+├── Button.module.css       # スタイル
+├── Button.stories.tsx      # ストーリー/プレビュー
+├── Button.test.tsx         # テスト
+└── index.ts                # エクスポート
+```
 
-**React + TypeScript** (`Button.tsx`):
+**複雑なコンポーネント**:
+```
+src/components/UserCard/
+├── UserCard.tsx
+├── UserCard.module.css
+├── UserCard.stories.tsx
+├── UserCard.test.tsx
+├── components/             # サブコンポーネント
+│   ├── Avatar.tsx
+│   └── UserInfo.tsx
+├── hooks/                  # カスタムフック
+│   └── useUserData.ts
+└── index.ts
+```
+
+### 3. コンポーネントファイルの作成
+
+**基本構造**:
+
+1. **インポート**: 必要な依存関係
+2. **型定義**: Props の interface/type
+3. **コンポーネント本体**: JSX/テンプレート
+4. **エクスポート**: デフォルトまたは名前付き
+
+**Props 設計のチェックリスト**:
+- [ ] 必須プロパティと任意プロパティを明確に区別
+- [ ] デフォルト値を適切に設定
+- [ ] 型定義にドキュメントコメントを追加
+- [ ] イベントハンドラの命名を統一（onClick, onSubmit等）
+- [ ] children または slot の使用を検討
+- [ ] as/component prop でポリモーフィズムを実現（必要に応じて）
+
+**アクセシビリティチェックリスト**:
+- [ ] セマンティックHTML要素を使用（button, nav, main等）
+- [ ] ARIA属性を適切に設定
+- [ ] キーボードナビゲーションをサポート
+- [ ] フォーカス管理を実装
+- [ ] スクリーンリーダー対応のラベルを追加
+
+### 4. スタイリングの実装
+
+**スタイリング手法の選択**:
+- **CSS Modules**: スコープ付きCSS、設定不要
+- **CSS-in-JS**: styled-components, Emotion, Vanilla Extract
+- **Utility-First**: Tailwind CSS, UnoCSS
+- **CSS Preprocessor**: Sass, Less
+- **CSS Framework**: Bootstrap, Chakra UI, Material UI
+
+**レスポンシブデザイン**:
+- モバイルファースト設計
+- ブレークポイントの定義
+- フレキシブルレイアウト（Flexbox, Grid）
+
+### 5. ストーリー/プレビューの作成
+
+**目的**:
+- コンポーネントの全バリエーションを可視化
+- 開発中の動作確認
+- デザインレビュー
+- ドキュメント生成
+
+**作成すべきストーリー**:
+- **デフォルト**: 基本的な使用例
+- **バリエーション**: すべての props の組み合わせ
+- **状態**: loading, error, empty等
+- **エッジケース**: 長いテキスト、空データ等
+
+**ストーリーの構造**:
 ```typescript
-import React from 'react';
-import styles from './Button.module.css';
-
-export interface ButtonProps {
-  /**
-   * ボタンのラベル
-   */
-  label: string;
-  /**
-   * ボタンのバリエーション
-   */
-  variant?: 'primary' | 'secondary' | 'danger';
-  /**
-   * ボタンのサイズ
-   */
-  size?: 'small' | 'medium' | 'large';
-  /**
-   * 無効状態
-   */
-  disabled?: boolean;
-  /**
-   * クリックイベントハンドラ
-   */
-  onClick?: () => void;
-}
-
-/**
- * ボタンコンポーネント
- */
-export const Button: React.FC<ButtonProps> = ({
-  label,
-  variant = 'primary',
-  size = 'medium',
-  disabled = false,
-  onClick,
-}) => {
-  return (
-    <button
-      className={`${styles.button} ${styles[variant]} ${styles[size]}`}
-      disabled={disabled}
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
-  );
-};
-```
-
-**Vue 3 + TypeScript** (`Button.vue`):
-```vue
-<script setup lang="ts">
-export interface ButtonProps {
-  /** ボタンのラベル */
-  label: string;
-  /** ボタンのバリエーション */
-  variant?: 'primary' | 'secondary' | 'danger';
-  /** ボタンのサイズ */
-  size?: 'small' | 'medium' | 'large';
-  /** 無効状態 */
-  disabled?: boolean;
-}
-
-const props = withDefaults(defineProps<ButtonProps>(), {
-  variant: 'primary',
-  size: 'medium',
-  disabled: false,
-});
-
-const emit = defineEmits<{
-  click: [];
-}>();
-
-const handleClick = () => {
-  emit('click');
-};
-</script>
-
-<template>
-  <button
-    :class="['button', variant, size]"
-    :disabled="disabled"
-    @click="handleClick"
-  >
-    {{ label }}
-  </button>
-</template>
-
-<style scoped>
-.button {
-  /* ボタンスタイル */
-}
-</style>
-```
-
-#### 2.3. スタイルファイルの作成
-
-**CSS Modules** (`Button.module.css`):
-```css
-.button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Variants */
-.primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.danger {
-  background-color: #dc3545;
-  color: white;
-}
-
-/* Sizes */
-.small {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-}
-
-.medium {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-}
-
-.large {
-  padding: 0.75rem 1.5rem;
-  font-size: 1.125rem;
-}
-```
-
-#### 2.4. Storybook ストーリーの作成
-
-**React** (`Button.stories.tsx`):
-```typescript
-import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button';
-
-const meta = {
-  title: 'Atoms/Button',
+// 例: Storybook形式
+export default {
+  title: 'Components/Button',
   component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
+  parameters: { layout: 'centered' },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['primary', 'secondary', 'danger'],
-    },
-    size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-    },
-  },
-} satisfies Meta<typeof Button>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    label: 'Button',
-    variant: 'primary',
+    variant: { control: 'select', options: ['primary', 'secondary'] },
+    size: { control: 'select', options: ['small', 'medium', 'large'] },
   },
 };
 
-export const Secondary: Story = {
-  args: {
-    label: 'Button',
-    variant: 'secondary',
-  },
+export const Primary = {
+  args: { label: 'Button', variant: 'primary' },
 };
 
-export const Danger: Story = {
-  args: {
-    label: 'Button',
-    variant: 'danger',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    label: 'Button',
-    size: 'small',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    label: 'Button',
-    size: 'large',
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    label: 'Button',
-    disabled: true,
-  },
+export const Secondary = {
+  args: { label: 'Button', variant: 'secondary' },
 };
 ```
 
-#### 2.5. テストファイルの作成
+### 6. テストの作成
 
-**React Testing Library** (`Button.test.tsx`):
+**テスト戦略**:
+- **ユニットテスト**: コンポーネントの動作を検証
+- **スナップショットテスト**: UI の変更を検出
+- **インタラクションテスト**: ユーザー操作をシミュレート
+- **アクセシビリティテスト**: a11y 準拠を確認
+
+**テストケースの例**:
 ```typescript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Button } from './Button';
-
 describe('Button', () => {
+  // レンダリングテスト
   it('renders with label', () => {
     render(<Button label="Click me" />);
     expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
+  // インタラクションテスト
   it('calls onClick when clicked', () => {
     const handleClick = jest.fn();
     render(<Button label="Click me" onClick={handleClick} />);
-
     fireEvent.click(screen.getByText('Click me'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
+  // 状態テスト
   it('does not call onClick when disabled', () => {
     const handleClick = jest.fn();
     render(<Button label="Click me" onClick={handleClick} disabled />);
-
     fireEvent.click(screen.getByText('Click me'));
     expect(handleClick).not.toHaveBeenCalled();
   });
 
+  // バリエーションテスト
   it('applies variant class', () => {
     const { rerender } = render(<Button label="Button" variant="primary" />);
     expect(screen.getByText('Button')).toHaveClass('primary');
-
-    rerender(<Button label="Button" variant="secondary" />);
-    expect(screen.getByText('Button')).toHaveClass('secondary');
   });
 
-  it('applies size class', () => {
-    const { rerender } = render(<Button label="Button" size="small" />);
-    expect(screen.getByText('Button')).toHaveClass('small');
-
-    rerender(<Button label="Button" size="large" />);
-    expect(screen.getByText('Button')).toHaveClass('large');
+  // アクセシビリティテスト
+  it('has no accessibility violations', async () => {
+    const { container } = render(<Button label="Click me" />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
 ```
 
-#### 2.6. Index ファイルの作成
+### 7. Index ファイルの作成
 
-**Index** (`index.ts`):
+**エクスポートパターン**:
 ```typescript
+// Named export（推奨）
 export { Button } from './Button';
 export type { ButtonProps } from './Button';
+
+// Re-export with types
+export { Button, type ButtonProps } from './Button';
+
+// Default export
+export { default } from './Button';
 ```
 
-### 3. コンポーネントの動作確認
+### 8. ドキュメント化
 
-**質問5: 動作確認**
-- 「Storybook で動作確認しますか？」
+**JSDocコメントの追加**:
+```typescript
+/**
+ * ボタンコンポーネント
+ *
+ * @example
+ * ```tsx
+ * <Button label="Click me" variant="primary" onClick={handleClick} />
+ * ```
+ */
+export interface ButtonProps {
+  /** ボタンのラベル */
+  label: string;
+  /** ボタンのバリエーション @default 'primary' */
+  variant?: 'primary' | 'secondary' | 'danger';
+  /** クリックイベントハンドラ */
+  onClick?: () => void;
+}
+```
 
-**Storybook を起動**:
+**README または Storybook Docs**:
+- 使用例
+- Props の説明
+- アクセシビリティガイドライン
+- カスタマイズ方法
+
+### 9. 動作確認
+
+**確認項目**:
+- [ ] コンポーネントが正しくレンダリングされる
+- [ ] すべての props が機能する
+- [ ] イベントハンドラが正しく動作する
+- [ ] スタイルが適用されている
+- [ ] レスポンシブデザインが機能する
+- [ ] アクセシビリティ要件を満たしている
+- [ ] テストがすべて通る
+
+**ストーリー/プレビューツールでの確認**:
 ```bash
+# Storybook
 npm run storybook
+
+# Histoire (Vite)
+npm run story:dev
 ```
 
-**ブラウザでアクセス**:
-- `http://localhost:6006`
-- Atoms/Button を確認
-
-### 4. テストの実行
-
-**テストを実行**:
+**テストの実行**:
 ```bash
 npm test Button
 # または
 npm test -- Button.test.tsx
 ```
 
-**質問6: テスト結果**
-- 「すべてのテストが通りましたか？」
+### 10. Git コミット
 
-### 5. コンポーネントの使用例
-
-**他のコンポーネントで使用**:
-```typescript
-import { Button } from '@/components/atoms/Button';
-
-function MyPage() {
-  const handleClick = () => {
-    console.log('Button clicked!');
-  };
-
-  return (
-    <div>
-      <Button label="Click me" variant="primary" onClick={handleClick} />
-    </div>
-  );
-}
-```
-
-### 6. Git コミット
-
-**ファイルをコミット**:
 ```bash
-git add src/components/atoms/Button/
+git add src/components/Button/
+
 git commit -m "feat: add Button component
 
 - Add Button component with variants (primary, secondary, danger)
 - Add size options (small, medium, large)
-- Add Storybook stories
-- Add unit tests with React Testing Library
+- Add component stories/preview
+- Add unit tests with testing library
+- Support accessibility features (ARIA, keyboard navigation)
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -416,35 +289,33 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 - コンポーネントファイルが作成されている
 - Props 型定義が記述されている
-- スタイルファイルが作成されている
-- Storybook ストーリーが作成されている
+- スタイルが実装されている
+- ストーリー/プレビューが作成されている（使用している場合）
 - テストファイルが作成され、テストが通る
 - Index ファイルでエクスポートされている
-- Storybook で正しく表示される
-- 他のコンポーネントで使用できる
+- アクセシビリティ要件を満たしている
+- ドキュメントが記述されている
 
 ## エスカレーション
 
 - **命名規則の不一致**:
-  - 「コンポーネント名がプロジェクトの命名規則に従っていません。PascalCase を使用してください。」
+  - プロジェクトの命名規則を確認
+  - チーム内で合意を取る
+  - ESLint ルールで強制
 
 - **ディレクトリ構造の不一致**:
-  - 「コンポーネントの配置場所が不適切です。プロジェクトのアーキテクチャパターンに従ってください。」
-
-- **Props の型定義不足**:
-  - 「Props の型定義が不十分です。すべての Props に型と JSDoc コメントを追加してください。」
+  - プロジェクトのアーキテクチャパターンを確認
+  - 既存コンポーネントと整合性を取る
 
 - **テストが失敗する**:
-  - 「テストが失敗しました。以下を確認してください：」
-    - テストの import パスが正しいか
-    - Testing Library のマッチャーが正しいか
-    - Mock が必要な依存関係があるか
+  - import パスを確認
+  - テストライブラリのバージョンを確認
+  - Mock が必要な依存関係を確認
 
-- **Storybook が表示されない**:
-  - 「Storybook が表示されません。以下を確認してください：」
-    - Storybook の設定ファイル
-    - ストーリーファイルの import パス
-    - コンポーネントのエクスポート
+- **ストーリー/プレビューが表示されない**:
+  - 設定ファイルを確認
+  - import パスを確認
+  - エクスポートを確認
 
 ## ベストプラクティス
 
@@ -452,9 +323,37 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - **デフォルト値**: Props にデフォルト値を設定
 - **アクセシビリティ**: ARIA 属性を適切に設定
 - **テストカバレッジ**: Props のすべてのバリエーションをテスト
-- **Storybook**: すべてのバリエーションのストーリーを作成
+- **ストーリー/プレビュー**: すべてのバリエーションを可視化
 - **再利用性**: 汎用的で再利用可能なコンポーネントを設計
 - **ドキュメント**: JSDoc コメントで使用方法を記載
 - **命名**: 説明的で一貫性のある命名
-- **スタイル**: CSS Modules または styled-components を使用
-- **パフォーマンス**: React.memo でメモ化（必要に応じて）
+- **分離**: プレゼンテーショナルとコンテナを分離
+- **パフォーマンス**: メモ化を適切に使用
+
+## 参考: 技術スタック別のパターン
+
+**UI フレームワーク**:
+- React, Preact
+- Vue 3, Nuxt 3
+- Svelte, SvelteKit
+- Solid.js, Qwik
+- Angular, Lit
+
+**スタイリング**:
+- CSS Modules
+- styled-components, Emotion
+- Tailwind CSS, UnoCSS
+- Vanilla Extract, Panda CSS
+- Sass, Less, PostCSS
+
+**ストーリー/プレビュー**:
+- Storybook
+- Histoire (Vite)
+- Ladle
+- Component Story Format (CSF)
+
+**テスティング**:
+- Jest, Vitest
+- React Testing Library, Vue Testing Library
+- Playwright, Cypress
+- jest-axe (アクセシビリティ)
