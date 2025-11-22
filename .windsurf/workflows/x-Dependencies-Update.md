@@ -3,7 +3,7 @@ description: 依存関係を安全に更新し、破壊的変更やセキュリ�
 auto_execution_mode: 1
 ---
 
-# /x-Dependencies-Update
+# Dependencies-Update (x-Dependencies-Update)
 
 ## 目的
 

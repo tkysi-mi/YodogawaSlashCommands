@@ -3,7 +3,7 @@ description: UIコンポーネントをボイラープレート、型定義、�
 auto_execution_mode: 1
 ---
 
-# /x-Component-Create
+# Component-Create (x-Component-Create)
 
 ## 目的
 

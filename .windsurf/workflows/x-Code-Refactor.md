@@ -3,7 +3,7 @@ description: 技術的負債の棚卸しから改善案立案・リファクタ�
 auto_execution_mode: 1
 ---
 
-# /refactoring-expert
+# Code-Refactor (x-Code-Refactor)
 
 ## 目的
 

@@ -3,7 +3,7 @@ description: 実装完了後にタスクドキュメントとプロジェクト�
 auto_execution_mode: 1
 ---
 
-# /c-002-UpdateDocumentation
+# UpdateDocumentation (c-002)
 
 ## 目的
 
@@ -42,6 +42,9 @@ auto_execution_mode: 1
 
 **未完了の場合**:
 - 「タスク {task-id} の実装がまだ完了していません。先に `/c-001-ImplementTask` を実行してください。」
+
+**推奨**:
+- `/c-001-ImplementTask` の最後に表示される推奨アクションから続けて実行することが最も効率的です。
 
 ### 2. 実装内容の確認
 
@@ -622,7 +625,7 @@ git diff docs/
 **ステージング**:
 ```bash
 # タスクドキュメントをステージング
-git add docs/tasks/task000001-email-verification/
+git add docs/tasks/task{task-id}-{スラッグ}/
 
 # プロジェクトドキュメントをステージング
 git add docs/01-requirements/
@@ -637,7 +640,7 @@ git add .env.example
 
 **コミット**:
 ```bash
-git commit -m "docs(task-000001): update documentation for email verification feature
+git commit -m "docs(task-{task-id}): update documentation for {機能名}
 
 Task-level documentation:
 - Update a-definition.md with implementation results
@@ -645,29 +648,38 @@ Task-level documentation:
 - Update c-implementation.md with implementation notes and retrospective
 
 Project-level documentation:
-- Add email verification to features-implemented.md
-- Update User entity in domain-model.md
-- Add email verification terms to ubiquitous-language.md
-- Update users table in data-model.md
-- Add email verification endpoints to api-spec.md
+- Add {機能名} to features-implemented.md
+- Update domain-model.md
+- Add terms to ubiquitous-language.md
+- Update data-model.md
+- Update api-spec.md
 - Update README.md with setup instructions
-- Add changelog entry for email verification
+- Add changelog entry
 
-Changes reflect actual implementation:
-- Email verification using SendGrid
-- 24-hour token expiration
-- UUID v4 token generation
-
-Related: task000001-email-verification, PR #123
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
+Related: task{task-id}-{スラッグ}"
 ```
 
-### 7. ドキュメントレビュー
+### 7. PRへの反映とレビュー依頼
 
-#### 7.1. レビュー観点
+#### 7.1. PRの更新（該当する場合）
+
+既にPRが作成されている場合、ドキュメントの更新をプッシュします。
+
+```bash
+git push origin task/{task-id}-{スラッグ}
+```
+
+#### 7.2. PR作成（まだ作成していない場合）
+
+もし `/c-001-ImplementTask` でPRを作成していない場合は、ここで作成します。
+
+**GitHub CLI を使用する場合**:
+```bash
+gh pr create --title "feat(task-{id}): {タスク概要}" --body-file docs/tasks/task{id}-{スラッグ}/pr-description.md
+```
+※ `pr-description.md` がない場合は、`c-implementation.md` の内容を参考に作成してください。
+
+#### 7.3. レビュー観点
 
 **ドキュメント品質の確認**:
 - [ ] **正確性**: 実装内容と一致しているか
@@ -676,7 +688,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - [ ] **一貫性**: ドキュメント間で用語・形式が統一されているか
 - [ ] **最新性**: 古い情報が削除されているか
 
-#### 7.2. チームレビューの依頼（オプション）
+#### 7.4. チームレビューの依頼（オプション）
 
 **レビュー依頼**:
 - ドキュメント更新が大規模な場合、チームレビューを依頼
@@ -701,6 +713,12 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 **タスクテンプレート**（`.windsurf/templates/tasks/task-template/`）の更新:
 - 今回のタスクで有効だった形式・セクションをテンプレートに反映
 - 次回のタスクで使いやすいテンプレートに改善
+
+## 自動化のヒント
+
+将来的に、以下のスクリプトを作成してドキュメント更新を一部自動化することを検討してください：
+- `scripts/update-docs.sh`: コミットログから変更内容を抽出してドラフトを作成
+- `scripts/generate-api-docs.sh`: コードからAPI仕様書を生成
 
 ## 完了条件
 

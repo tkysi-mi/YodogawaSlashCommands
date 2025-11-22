@@ -3,7 +3,7 @@ description: Webアクセシビリティを監査し、WCAG準拠とスクリー
 auto_execution_mode: 1
 ---
 
-# /x-Accessibility-Check
+# Accessibility-Check (x-Accessibility-Check)
 
 ## 目的
 

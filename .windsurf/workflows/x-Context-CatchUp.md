@@ -3,7 +3,7 @@ description: 仕様と既存実装を照らし合わせてギャップ・リス�
 auto_execution_mode: 1
 ---
 
-# /speckit.analyze
+# Context-CatchUp (x-Context-CatchUp)
 
 ## 目的
 

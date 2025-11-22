@@ -3,7 +3,7 @@ description: インシデントやバグ報告の再現から証拠収集、仮�
 auto_execution_mode: 1
 ---
 
-# /root-cause-analysis
+# Problem-RootCauseAnalysis (x-Problem-RootCauseAnalysis)
 
 ## 目的
 

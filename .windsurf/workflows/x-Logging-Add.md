@@ -3,7 +3,7 @@ description: 構造化ログを実装し、本番環境での問題調査とモ�
 auto_execution_mode: 1
 ---
 
-# /x-Logging-Add
+# Logging-Add (x-Logging-Add)
 
 ## 目的
 

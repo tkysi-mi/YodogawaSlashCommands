@@ -3,7 +3,7 @@ description: ローカル変更を検証し、安全なコミットとリモー�
 auto_execution_mode: 1
 ---
 
-# /x-Repository-Push
+# Repository-Push (x-Repository-Push)
 
 ## 目的
 

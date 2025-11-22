@@ -3,7 +3,7 @@ description: 開発・テスト用のサンプルデータをデータストア�
 auto_execution_mode: 1
 ---
 
-# /x-Database-Seed
+# Database-Seed (x-Database-Seed)
 
 ## 目的
 

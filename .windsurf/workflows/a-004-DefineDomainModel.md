@@ -1,319 +1,133 @@
 ---
 description: Event Storming形式でドメインモデルを定義し、ユビキタス言語を反復的に洗練させるワークフロー
-auto_execution_mode: 1
 ---
 
-# /a-004-DefineDomainModel
+# DefineDomainModel (a-004)
 
 ## 目的
 
 - Event Storming形式でドメインモデルを体系的に定義する。
 - ドメインモデルを作成しながら、ユビキタス言語（共通用語）を並行して洗練させる。
 - Bounded Context（境界づけられたコンテキスト）を特定し、各コンテキスト内のActors、Commands、Events、Policies、Aggregatesを明確化する。
-- ドメインエキスパートと開発者の共通理解を構築し、ビジネス価値の高いドメインモデルを作成する。
 
 ## 前提
 
-- `docs/project/02-behavior/01-scenarios.md` が作成されていること（先に `/a-003-CreateScenarios` を実行）。
-- `docs/project/03-domain/` ディレクトリが存在すること（存在しない場合は先に `/a-001-SetupDocStructure` を実行）。
-- `.windsurf/templates/project/03-domain/` テンプレートが最新状態であること。
+- `docs/project/behavior/01-scenarios.md` が作成されていること（先に `CreateScenarios` (a-003) を実行）。
+- `docs/project/domain/` ディレクトリが存在すること（存在しない場合は先に `SetupDocStructure` (a-001) を実行）。
 - ドメインエキスパート（ビジネス側の専門家）と協力できること。
-
-## 重要な前提：ドメインモデルとユビキタス言語の反復的プロセス
-
-**このワークフローは反復的です**：
-
-1. **ドメインモデル → ユビキタス言語**
-   - Aggregate、Command、Event を定義する過程で新しい用語が生まれる
-   - その用語をユビキタス言語に追加
-
-2. **ユビキタス言語 → ドメインモデル**
-   - 用語を明確化する過程で、ドメインモデルの設計を見直す
-   - 曖昧な用語や重複する概念を統合
-
-3. **継続的な往復**
-   - ドメインモデルを作成しながら、常にユビキタス言語を更新
-   - ユビキタス言語を見直しながら、ドメインモデルを洗練
-
-**このワークフロー内で両方のドキュメント（`01-domain-model.md` と `02-ubiquitous-language.md`）を同時に作成・更新します。**
 
 ## 手順
 
 ### 1. ディレクトリと前提条件の確認
 
-- `docs/project/03-domain/` ディレクトリの存在を確認：
+- `docs/project/domain/` ディレクトリの存在を確認：
   ```bash
-  ls -la docs/project/03-domain/ 2>/dev/null || echo "ディレクトリが存在しません"
+  ls -la docs/project/domain/ 2>/dev/null || echo "ディレクトリが存在しません"
   ```
 
 - ディレクトリが存在しない場合：
-  - `Call /a-001-SetupDocStructure`
+  - ユーザーに通知：「`docs/project/domain/` ディレクトリが見つかりません。先に `SetupDocStructure` (a-001) を実行してください。」
 
 - シナリオの確認：
-  - `@docs/project/02-behavior/01-scenarios.md` を読み込む。
-  - シナリオが存在しない場合は、ユーザーに通知して先に `/a-003-CreateScenarios` の実行を推奨。
+  - `docs/project/behavior/01-scenarios.md` を読み込み、内容を確認する。
 
-### 2. テンプレート確認
+### 2. テンプレートの準備
 
-- テンプレートを読み込み、Event Storming形式を理解する：
-  - `@.windsurf/templates/project/03-domain/01-domain-model.md`
-  - `@.windsurf/templates/project/03-domain/02-ubiquitous-language.md`
+- テンプレートをコピーして作業用ファイルを作成する：
+  ```bash
+  cp ".windsurf/templates/project/03-domain/01-domain-model.md" "docs/project/domain/01-domain-model.md"
+  cp ".windsurf/templates/project/03-domain/02-ubiquitous-language.md" "docs/project/domain/02-ubiquitous-language.md"
+  ```
 
 ### 3. Bounded Context の特定
 
-- 「プロジェクトをいくつかのビジネス領域（Bounded Context）に分割します。」
-
-- シナリオとユーザーストーリーを基に、Bounded Context を提案：
-  - 「シナリオから、以下のBounded Contextが考えられます：」
-  - 例：「ユーザー管理」「注文処理」「在庫管理」「決済」「通知」
-
-- 各Contextについて確認：
-  - 「この分け方で適切ですか？」
-  - 「統合すべき、または分割すべきContextはありますか？」
-
-- 各Bounded Contextの戦略的分類を確認：
-  - **Core Domain**: 「ビジネスの競争優位性を生む中核領域はどれですか？」
-  - **Supporting Domain**: 「コアをサポートする重要な領域はどれですか？」
-  - **Generic Domain**: 「汎用的な機能（既製品で代替可能）はどれですか？」
+- シナリオとユーザーストーリーを分析し、Bounded Context（ビジネス領域）を提案する。
+  - 「シナリオから、以下のBounded Contextが考えられます：[コンテキスト一覧]」
+- 各Contextの戦略的分類（Core/Supporting/Generic）を確認する。
 
 ### 4. 各Bounded Context のドメインモデル定義
 
-**重要**: 各Contextについて、以下のステップを**反復的に**実行します。各要素を定義するたびに、**ユビキタス言語を同時に更新**します。
+各Bounded Contextについて、以下の要素をヒアリング・定義し、`01-domain-model.md` を更新する。
+**同時に、新しい用語が登場するたびに `02-ubiquitous-language.md` にも追記する。**
 
-#### 4.1. Context の概要
+#### 4.1 概要とアクター
+- Contextの責務と主要な責任
+- 登場するアクター（Actors）とその役割
 
-- **Context名**: 「このBounded Contextの名前は？」
-- **責務**: 「このContextが担当するビジネス機能を1-2文で説明してください。」
-- **主要な責任**: 「このContextの主要な責任をリストアップしてください。」
+#### 4.2 コマンドとイベント (Event Storming)
+- アクターが実行するアクション（**Commands**、命令形）
+- その結果発生するビジネス上の出来事（**Domain Events**、過去形）
+- 自動化ルール（**Policies**、"Whenever ..., then ..."）
 
-#### 4.2. Actors（アクター）の定義
-
-- 「このBounded Context内で行動する人やシステムは誰ですか？」
-  - 例：「管理者」「エンドユーザー」「外部API」
-
-- 各アクターについて：
-  - **アクター名**
-  - **説明**: 「このアクターの責任や権限は？」
-
-- **ユビキタス言語への追加**:
-  - 新しいアクターが登場したら、ユビキタス言語に追加：
-    - 用語：アクター名
-    - 定義：アクターの役割と責任
-    - 使用例：コード内での使用（例：`class Admin`）
-
-#### 4.3. Commands（コマンド）の定義
-
-- 「アクターが実行する主要なアクション（コマンド）は何ですか？」
-  - **命令形で記述**：「ユーザーを登録する」「注文を確定する」
-  - シナリオのWhenステップを参考にする
-
-- 各コマンドについて：
-  - **コマンド名**（命令形）
-  - **発行者**（どのアクター）
-  - **説明**（コマンドの目的と効果）
-
-- **ユビキタス言語への追加**:
-  - 重要なコマンドをユビキタス言語に追加：
-    - 用語：コマンド名（動詞）
-    - 定義：コマンドの意味
-    - 使用例：`registerUser()`, `confirmOrder()`
-
-#### 4.4. Domain Events（ドメインイベント）の定義
-
-- 「ビジネスにとって重要な出来事（イベント）は何ですか？」
-  - **過去形で記述**：「ユーザー登録完了」「注文確定」
-  - シナリオのThenステップを参考にする
-  - コマンドの結果として発生するイベントを洗い出す
-
-- 各イベントについて：
-  - **イベント名**（過去形）
-  - **トリガー**（どのコマンドから発生）
-  - **説明**（イベントの意味とビジネスへの影響）
-
-- **ユビキタス言語への追加**:
-  - 重要なイベントをユビキタス言語に追加
-  - イベント内に含まれるデータ項目も用語として定義
-
-#### 4.5. Policies（ポリシー）の定義
-
-- 「自動化ルールやビジネスルールはありますか？」
-  - フォーマット：「Whenever [イベント], then [コマンド]」
-  - 例：「Whenever ユーザー登録完了, then ウェルカムメールを送信する」
-
-- 各ポリシーについて：
-  - **ポリシー名**
-  - **条件**（Whenever イベント）
-  - **アクション**（Then コマンド）
-  - **説明**
-
-- **ユビキタス言語への追加**:
-  - ポリシー名や自動化ルールに関連する用語を追加
-
-#### 4.6. Aggregates（集約）の定義
-
-- 「一貫性を保つべきエンティティの集まり（Aggregate）は何ですか？」
-  - Aggregateは、トランザクション境界を定義する
-  - 1つのAggregateは1つのルートエンティティを持つ
-
-- 各Aggregateについて：
-  - **Aggregate名**（ルートエンティティ）
-  - **責務**（このAggregateが保護するビジネスルール）
-  - **含まれるエンティティ**（集約内のオブジェクト）
-
-- **ユビキタス言語への追加**:
-  - Aggregate名とそれに含まれるエンティティをすべて追加：
-    - 用語：Aggregate名（例：User, Order）
-    - 定義：Aggregateの責務
-    - 使用例：クラス名、テーブル名
-
-#### 4.7. Read Models（読み取りモデル）の定義
-
-- 「UIに表示する情報（Read Model）は何ですか？」
-  - CQRSの概念：読み取り専用のモデル
-
-- 各Read Modelについて：
-  - **Read Model名**（画面やビューの名称）
-  - **表示データ**（必要な情報）
-  - **利用者**（どのアクター）
-
-#### 4.8. External Systems（外部システム）の定義
-
-- 「このBounded Contextが連携する外部システムはありますか？」
-  - 例：「メール送信サービス」「認証プロバイダ」
-
-- 各外部システムについて：
-  - **システム名**
-  - **連携方法**（REST API, イベント, バッチなど）
-  - **目的**
+#### 4.3 集約とモデル
+- 一貫性を保つエンティティの塊（**Aggregates**）
+- 画面表示用の参照モデル（**Read Models**）
+- 連携する外部システム（**External Systems**）
 
 ### 5. ユビキタス言語の洗練
 
-**このステップは、ステップ4と並行して実行されます。**
+- `02-ubiquitous-language.md` を見直し、以下の点を確認・修正する：
+  - 用語の重複や曖昧さがないか
+  - 禁止用語（Data, Processなど曖昧な語）が含まれていないか
+  - 定義が具体的で、Context内での意味に限定されているか
 
-- 各Bounded Contextで定義したすべての用語を、`02-ubiquitous-language.md` に記録する。
+### 6. Context Map の定義
 
-#### 5.1. 用語の重複・曖昧さのチェック
+- 各Context間の関係性（Customer-Supplier, Shared Kernelなど）を定義し、`01-domain-model.md` のContext Mapセクション（Mermaid図）を更新する。
 
-- 「以下の用語が複数の意味で使われていませんか？」
-  - 同じ用語が異なるContextで異なる意味を持つ場合は、Context名を明記
-  - 類似する用語（例：Customer vs User）の違いを明確化
+### 7. レビューと確認
 
-#### 5.2. 禁止用語の特定
-
-- 「使用を避けるべき曖昧な用語はありますか？」
-  - 例：「Data」「Process」「Manager」など、意味が広すぎる用語
-
-- 禁止用語テーブルを作成：
-  - **禁止用語**
-  - **理由**（なぜ禁止か）
-  - **推奨用語**（代わりに使うべき用語）
-
-#### 5.3. ドメインモデルへのフィードバック
-
-- ユビキタス言語を見直した結果、ドメインモデルを修正する必要がある場合：
-  - 「この用語の定義を見直した結果、Aggregateの設計を変更すべきですか？」
-  - **反復的にステップ4に戻る**
-
-### 6. Context Map（コンテキスト間の関係）の定義
-
-- 「各Bounded Context間の関係性を定義します。」
-
-#### 6.1. Context間の関係パターンの特定
-
-各Context間の関係について：
-
-- **上流Context**と**下流Context**を特定
-- **関係パターン**を選択：
-  - `Customer-Supplier`: 顧客-供給者関係
-  - `Shared Kernel`: 共有カーネル
-  - `Anticorruption Layer`: 腐敗防止層
-  - `Open Host Service`: 公開ホストサービス
-  - `Partnership`: パートナーシップ
-  - `Conformist`: 順応者
-  - `Separate Ways`: 独立
-
-- **通信方法**: REST API, Domain Events, GraphQL など
-- **やり取りされるデータ**: 主要なデータ
-
-#### 6.2. Context Map図の作成（後続ワークフローで視覚化）
-
-- Context間の関係性を一覧表にまとめる。
-- 視覚化（Mermaid図）は `/a-005-CreateDomainDiagram` で作成。
-
-### 7. ドキュメント作成
-
-- 収集した情報を基に、2つのドキュメントを作成：
-  - `docs/project/03-domain/01-domain-model.md`
-  - `docs/project/03-domain/02-ubiquitous-language.md`
-
-- **HTMLコメントは削除せず残す**
-- テンプレートの構造に従う
-- ドメインモデルとユビキタス言語の整合性を確認
-
-### 8. レビューと確認
-
-- ドメインエキスパートと開発者に提示し、以下を確認：
+- 作成したドキュメントを提示し、以下を確認する：
   - 「ビジネス用語は正確に表現されていますか？」
   - 「Aggregateの境界は適切ですか？」
   - 「ユビキタス言語の定義は明確ですか？」
-  - 「禁止用語や曖昧な用語はすべて排除されていますか？」
 
-- フィードバックを反映し、**反復的にドキュメントを更新**
+### 8. 完了条件と構造の確認
 
-### 9. 完成とコミット準備
+- 以下の完了条件を満たしているか、コマンドとチェックリストで確認してください：
 
-- 2つのドキュメントが完成したことを確認：
-  - `docs/project/03-domain/01-domain-model.md`
-  - `docs/project/03-domain/02-ubiquitous-language.md`
+  1. **構造確認**:
+     ```bash
+     # Bounded Context定義の確認
+     grep "Bounded Context:" docs/project/domain/01-domain-model.md && echo "OK" || echo "MISSING: Bounded Context definition"
+     # Aggregate定義の確認
+     grep "### Aggregates" docs/project/domain/01-domain-model.md && echo "OK" || echo "MISSING: Aggregates section"
+     # ユビキタス言語定義の確認
+     grep "| 用語 | 定義 |" docs/project/domain/02-ubiquitous-language.md && echo "OK" || echo "MISSING: Terminology table"
+     ```
 
-- 統計情報を表示：
-  - Bounded Context数
-  - 定義したAggregate数
-  - ユビキタス言語の用語数
-  - 禁止用語数
+  2. **チェックリスト**:
+     - [ ] `docs/project/domain/01-domain-model.md` が作成され、主要なEvent Storming要素が含まれている
+     - [ ] `docs/project/domain/02-ubiquitous-language.md` が作成され、用語が定義されている
+     - [ ] ドメインモデルとユビキタス言語の整合性が取れている
 
-- Git コミット準備完了を通知
+### 9. Git への追加（オプション）
+
+- ユーザーに確認：「作成したドメインモデルドキュメントを Git に追加しますか？」
+- 「はい」の場合、以下を実行：
+  ```bash
+  git add docs/project/domain/
+  git status
+  ```
+- 推奨コミットメッセージ：
+  ```
+  docs: ドメインモデルとユビキタス言語の定義
+
+  - Event Stormingによるドメインモデルの作成
+  - Bounded Contextごとのユビキタス言語の整備
+  ```
 
 ## 完了条件
 
-- `docs/project/03-domain/01-domain-model.md` が作成されている：
-  - 各Bounded Contextについて、Actors、Commands、Events、Policies、Aggregates、Read Models、External Systemsが定義されている
-  - Context Map（関係性一覧）が記載されている
-  - 戦略的分類（Core/Supporting/Generic）が明確
-
-- `docs/project/03-domain/02-ubiquitous-language.md` が作成されている：
-  - 各Bounded Contextごとに用語が定義されている
-  - 各用語に定義と使用例が記載されている
-  - 禁止用語が明確に記載され、推奨用語が提示されている
-
-- ドメインモデルとユビキタス言語の整合性が取れている：
-  - ドメインモデルで使われているすべての用語がユビキタス言語に定義されている
-  - ユビキタス言語の用語がドメインモデルで実際に使われている
-
-- ビジネス用語で記述され、技術的な実装詳細から独立している
-
-- ドメインエキスパートと開発者が内容を確認し、承認している
+- `docs/project/domain/01-domain-model.md` が作成されている。
+- `docs/project/domain/02-ubiquitous-language.md` が作成されている。
+- 各Bounded Contextについて、主要なドメイン要素（Aggregates, Commands, Events）が定義されている。
+- ドメインモデルで使用される用語がユビキタス言語として定義されている。
+- ユーザーが内容を承認している。
 
 ## エスカレーション
 
 - シナリオが不足していてドメインモデルを作成できない場合：
-  - 「シナリオが不足しているため、ドメインモデルを作成できません。先に `/a-003-CreateScenarios` を実行してシナリオを充実させてください。」
-
-- ドメインエキスパートが不在で、ビジネス用語を確認できない場合：
-  - 「ドメインエキスパートの協力が必要です。ビジネス側の専門家と一緒にこのワークフローを実行することを強く推奨します。」
-
+  - 「シナリオ不足のためモデル化が困難です。`CreateScenarios` (a-003) に戻ってシナリオを充実させましょう。」と提案する。
 - Bounded Contextの境界が不明確な場合：
-  - 「Bounded Contextの境界が不明確です。Event Stormingワークショップの実施を検討してください。」
-  - 暫定的な境界を設定し、後で見直すことを提案
-
-- ユビキタス言語とドメインモデルに矛盾が見つかった場合：
-  - 「以下の矛盾が見つかりました：[詳細]。どちらを修正すべきか確認してください。」
-  - **反復的にステップ4または5に戻る**
-
-- Aggregateの境界が大きすぎる、または小さすぎる場合：
-  - 「このAggregateは複雑すぎます。分割を検討しませんか？」
-  - 「これらのAggregateは常に一緒に更新されます。統合を検討しませんか？」
-
-- Context間の依存が循環している場合：
-  - 「Contextの依存が循環しています。アーキテクチャを見直す必要があります。」
-  - Anticorruption LayerやEvent駆動アーキテクチャの導入を提案
+  - 「境界が曖昧です。暫定的な境界を設定し、実装を進めながら見直す方針で進めませんか？」と提案する。

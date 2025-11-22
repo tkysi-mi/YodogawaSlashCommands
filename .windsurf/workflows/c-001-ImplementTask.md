@@ -3,7 +3,7 @@ description: 実装タスクリストの各ステップを順次実行し、テ�
 auto_execution_mode: 1
 ---
 
-# /c-001-ImplementTask
+# ImplementTask (c-001)
 
 ## 目的
 
@@ -25,7 +25,7 @@ auto_execution_mode: 1
 
 ## Spec-Kit スタイルの実行フロー
 
-このワークフローは [spec-kit](https://github.com/github/spec-kit) の `/speckit.implement` にインスパイアされ、以下の原則に従います：
+このワークフローは 、以下の原則に従います：
 
 1. **仕様駆動開発**: タスク定義とリサーチドキュメントが実行可能な仕様として機能
 2. **段階的な実装**: 一度にすべてを実装せず、ステップごとに進める

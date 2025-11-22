@@ -3,7 +3,7 @@ description: あいまいな要求や仕様を整理し、補足質問と前提�
 auto_execution_mode: 1
 ---
 
-# /speckit.clarify
+# Requirements-Clarify (x-Requirements-Clarify)
 
 ## 目的
 

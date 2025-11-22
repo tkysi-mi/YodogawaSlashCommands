@@ -3,7 +3,7 @@ description: 公式ドキュメントと公認サンプルを調査してから�
 auto_execution_mode: 1
 ---
 
-# /research-code-review
+# Code-ResearchAndReview (x-Code-ResearchAndReview)
 
 ## 目的
 

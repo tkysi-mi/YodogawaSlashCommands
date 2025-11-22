@@ -3,7 +3,7 @@ description: ビルド成果物のサイズを分析し、コード分割・遅�
 auto_execution_mode: 1
 ---
 
-# /x-Bundle-Optimize
+# Bundle-Optimize (x-Bundle-Optimize)
 
 ## 目的
 

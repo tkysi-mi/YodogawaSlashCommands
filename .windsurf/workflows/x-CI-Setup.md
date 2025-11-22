@@ -3,7 +3,7 @@ description: GitHub Actions/GitLab CIでビルド・テスト・デプロイを�
 auto_execution_mode: 1
 ---
 
-# /x-CI-Setup
+# CI-Setup (x-CI-Setup)
 
 ## 目的
 

@@ -3,7 +3,7 @@ description: ローカル変更を検証し、安全なコミットとGitHubへ�
 auto_execution_mode: 1
 ---
 
-# /push-to-github
+# Repository-PushToGithub (x-Repository-PushToGithub)
 
 ## 目的
 
