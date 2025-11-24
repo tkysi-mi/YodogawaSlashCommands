@@ -19,9 +19,24 @@ auto_execution_mode: 1
 
 ### 1. スクリプトの実行
 
-- ドキュメント構造セットアップのために、スクリプト `.windsurf/scripts/setup-docs.sh` を実行してください。
+- ドキュメント構造セットアップのために、環境に応じたスクリプトを実行してください。
+
   ```bash
-  bash .windsurf/scripts/setup-docs.sh
+  # 環境を自動検出してスクリプトを実行
+  if [ -d ".agent" ]; then
+    SCRIPT_DIR=".agent"
+  elif [ -d ".windsurf" ]; then
+    SCRIPT_DIR=".windsurf"
+  elif [ -d ".cursor" ]; then
+    SCRIPT_DIR=".cursor"
+  elif [ -d ".claude" ]; then
+    SCRIPT_DIR=".claude"
+  else
+    echo "エラー: AI coding assistant ディレクトリが見つかりません"
+    exit 1
+  fi
+
+  bash "$SCRIPT_DIR/scripts/setup-docs.sh"
   ```
 
 ### 2. 結果の確認
