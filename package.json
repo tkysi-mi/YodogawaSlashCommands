@@ -1,9 +1,9 @@
 {
-  "name": "yodogawa-slash-commands",
+  "name": "yodogawa",
   "version": "1.0.0",
   "description": "CLI to install Yodogawa Slash Commands workflows",
   "bin": {
-    "yodogawa-slash-commands": "./bin/cli.js"
+    "yodogawa": "./bin/cli.js"
   },
   "files": [
     "bin",
