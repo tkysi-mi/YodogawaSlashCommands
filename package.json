@@ -1,0 +1,28 @@
+{
+  "name": "yodogawa-slash-commands",
+  "version": "1.0.0",
+  "description": "CLI to install Yodogawa Slash Commands workflows",
+  "bin": {
+    "yodogawa-slash-commands": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    ".windsurf"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "windsurf",
+    "antigravity",
+    "workflows",
+    "slash-commands"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2"
+  }
+}
